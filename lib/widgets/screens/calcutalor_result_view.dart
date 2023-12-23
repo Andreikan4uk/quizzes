@@ -114,6 +114,8 @@ class CalculatorResultView extends StatelessWidget {
                     Report(
                         title: 'Monthly payment',
                         value: '${monthlyPayment.toStringAsFixed(2)} \$'),
+                    SizedBox(height: 10),
+                    Divider(),
                   ],
                 ),
               ),

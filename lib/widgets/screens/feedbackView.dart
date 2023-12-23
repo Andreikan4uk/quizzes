@@ -37,49 +37,29 @@ class FeedbackView extends StatelessWidget {
                   children: [
                     const CustomBackButton(),
                     Spacer(flex: 4),
-                    Text(
-                      'Support',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
+                    Text('Support',
+                        style: Theme.of(context).textTheme.labelLarge),
                     Spacer(flex: 5),
                   ],
                 ),
-                const SizedBox(height: 130),
-                Form(
+                SizedBox(height: 130),
+                _buildForm(
+                  context: context,
                   key: _formKeyMessage,
-                  child: TextFormField(
-                    controller: textController,
-                    decoration: InputDecoration(
-                      hintText: 'Message text',
-                      hintStyle:
-                          Theme.of(context).textTheme.labelSmall!.copyWith(
-                                color: Colors.white.withOpacity(0.5),
-                              ),
-                    ),
-                    validator: (value) {
-                      return checkMessage(value);
-                    },
-                  ),
+                  controller: textController,
+                  hintText: 'Message text',
+                  validator: checkMessage,
                 ),
-                const SizedBox(height: 20),
-                Form(
+                SizedBox(height: 20),
+                _buildForm(
+                  context: context,
                   key: _formKeyEmail,
-                  child: TextFormField(
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      hintText: 'Your email',
-                      hintStyle: Theme.of(context)
-                          .textTheme
-                          .labelSmall!
-                          .copyWith(color: Colors.white.withOpacity(0.5)),
-                    ),
-                    validator: (value) {
-                      return checkEmail(value);
-                    },
-                  ),
+                  controller: emailController,
+                  hintText: 'Your email',
+                  keyboardType: TextInputType.emailAddress,
+                  validator: checkEmail,
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 Align(
                   alignment: Alignment.topLeft,
                   child: Text(
@@ -90,25 +70,16 @@ class FeedbackView extends StatelessWidget {
                         .copyWith(color: Colors.white.withOpacity(0.5)),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Form(
+                SizedBox(height: 20),
+                _buildForm(
+                  context: context,
                   key: _formKeySubject,
-                  child: TextFormField(
-                    controller: subjectController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      hintText: 'Subject of the message',
-                      hintStyle: Theme.of(context)
-                          .textTheme
-                          .labelSmall!
-                          .copyWith(color: Colors.white.withOpacity(0.5)),
-                    ),
-                    validator: (value) {
-                      return checkSubject(value);
-                    },
-                  ),
+                  controller: subjectController,
+                  hintText: 'Subject of the message',
+                  keyboardType: TextInputType.text,
+                  validator: checkSubject,
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30),
                 CustomButton(
                   text: 'Send',
                   onPressed: () async {
@@ -116,48 +87,80 @@ class FeedbackView extends StatelessWidget {
                         _formKeyEmail.currentState!.validate() &&
                         _formKeySubject.currentState!.validate()) {
                       await _send(context);
-                      textController.clear();
-                      emailController.clear();
-                      subjectController.clear();
-                      showDialog(
-                        context: context,
-                        builder: (context) => BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: 350,
-                                height: 150,
-                                margin: EdgeInsets.symmetric(horizontal: 20),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 20),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.white),
-                                  color: Colors.white.withOpacity(0.26),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'The action has been\ncompleted successfully',
-                                    textAlign: TextAlign.center,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                      _clearControllers();
+                      _showSuccessDialog(context);
                     }
                   },
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildForm({
+    required BuildContext context,
+    required GlobalKey<FormState> key,
+    required TextEditingController controller,
+    required String hintText,
+    TextInputType keyboardType = TextInputType.text,
+    required String? Function(String?) validator,
+  }) {
+    return Form(
+      key: key,
+      child: TextFormField(
+        controller: controller,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: Theme.of(context)
+              .textTheme
+              .labelSmall!
+              .copyWith(color: Colors.white.withOpacity(0.5)),
+        ),
+        validator: validator,
+      ),
+    );
+  }
+
+  void _clearControllers() {
+    textController.clear();
+    emailController.clear();
+    subjectController.clear();
+  }
+
+  void _showSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 350,
+              height: 150,
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.white),
+                color: Colors.white.withOpacity(0.26),
+              ),
+              child: Center(
+                child: Text(
+                  'The action has been\ncompleted successfully',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: Colors.white),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

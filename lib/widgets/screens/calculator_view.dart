@@ -59,158 +59,44 @@ class _CreditCalculatorViewState extends State<CreditCalculatorView> {
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Amount of credit',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                        Form(
-                          key: _formKeySumm,
-                          child: TextFormField(
-                            controller: principalController,
-                            keyboardType: TextInputType.number,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(color: Colors.black),
-                            decoration: InputDecoration(
-                              hintText: '100000.00',
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      color: Colors.black.withOpacity(0.3)),
-                              suffixText: '\$',
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                            validator: (value) {
-                              return checkSumm(value);
-                            },
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Loan period',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                        Form(
-                          key: _formKeyYears,
-                          child: TextFormField(
-                            controller: yearsController,
-                            keyboardType: TextInputType.number,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(color: Colors.black),
-                            decoration: InputDecoration(
-                              hintText: '10',
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      color: Colors.black.withOpacity(0.3)),
-                              suffixText: 'years',
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                            validator: (value) {
-                              return checkYears(value);
-                            },
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Annual rate',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                        Form(
-                          key: _formKeyRate,
-                          child: TextFormField(
-                            controller: interestRateController,
-                            keyboardType: TextInputType.number,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(color: Colors.black),
-                            decoration: InputDecoration(
-                              hintText: '10.0',
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      color: Colors.black.withOpacity(0.3)),
-                              suffixText: 'rate',
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                            validator: (value) {
-                              return checkRate(value);
-                            },
-                          ),
-                        ),
-                        SizedBox(height: 50),
-                        CustomButton(
-                          onPressed: () {
-                            if (_formKeySumm.currentState!.validate() &&
-                                _formKeyYears.currentState!.validate() &&
-                                _formKeyRate.currentState!.validate()) {
-                              calculateLoan();
-                              Navigator.of(context).pushNamed(
-                                RouteNames.calculatorResult,
-                                arguments: {
-                                  'summ':
-                                      double.parse(principalController.text),
-                                  'rate':
-                                      double.parse(interestRateController.text),
-                                  'years': double.parse(yearsController.text),
-                                  'credit': credit,
-                                  'monthlyPayment': monthlyPayment,
-                                  'overpaymentNum': overpaymentNum,
-                                  'overpaymentPercent': overpaymentPercent,
-                                  'progressValue': progressValue,
-                                },
-                              );
-                              principalController.clear();
-                              yearsController.clear();
-                              interestRateController.clear();
-                            }
-                            ;
-                          },
-                          text: 'Calculate',
-                        ),
-                      ],
-                    ),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Column(
+                    children: [
+                      _buildTextField(
+                        context: context,
+                        key: _formKeySumm,
+                        controller: principalController,
+                        hintText: '100000.00',
+                        suffixText: '\$',
+                        label: 'Amount of credit',
+                        validator: checkSumm,
+                      ),
+                      SizedBox(height: 10),
+                      _buildTextField(
+                        context: context,
+                        key: _formKeyYears,
+                        controller: yearsController,
+                        hintText: '10',
+                        suffixText: 'years',
+                        label: 'Loan period',
+                        validator: checkYears,
+                      ),
+                      SizedBox(height: 10),
+                      _buildTextField(
+                        context: context,
+                        key: _formKeyRate,
+                        controller: interestRateController,
+                        hintText: '10.0',
+                        suffixText: 'rate',
+                        label: 'Annual rate',
+                        validator: checkRate,
+                      ),
+                      SizedBox(height: 50),
+                      CustomButton(
+                        onPressed: () => _calculateLoanAndNavigate(),
+                        text: 'Calculate',
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -219,6 +105,85 @@ class _CreditCalculatorViewState extends State<CreditCalculatorView> {
         ),
       ),
     );
+  }
+
+  Widget _buildTextField({
+    required BuildContext context,
+    required GlobalKey<FormState> key,
+    required TextEditingController controller,
+    required String hintText,
+    required String suffixText,
+    required String label,
+    required String? Function(String?) validator,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            label,
+            style: Theme.of(context)
+                .textTheme
+                .displayMedium!
+                .copyWith(color: Colors.white),
+          ),
+        ),
+        Form(
+          key: key,
+          child: TextFormField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: Colors.black),
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: Colors.black.withOpacity(0.3)),
+              suffixText: suffixText,
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            validator: validator,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _clearControllers() {
+    principalController.clear();
+    yearsController.clear();
+    interestRateController.clear();
+  }
+
+  void _calculateLoanAndNavigate() {
+    if (_formKeySumm.currentState!.validate() &&
+        _formKeyYears.currentState!.validate() &&
+        _formKeyRate.currentState!.validate()) {
+      calculateLoan();
+      Navigator.of(context).pushNamed(
+        RouteNames.calculatorResult,
+        arguments: {
+          'summ': double.parse(principalController.text),
+          'rate': double.parse(interestRateController.text),
+          'years': double.parse(yearsController.text),
+          'credit': credit,
+          'monthlyPayment': monthlyPayment,
+          'overpaymentNum': overpaymentNum,
+          'overpaymentPercent': overpaymentPercent,
+          'progressValue': progressValue,
+        },
+      );
+      _clearControllers();
+    }
   }
 
   String? checkSumm(String? value) {
