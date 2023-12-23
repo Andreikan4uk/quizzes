@@ -146,7 +146,7 @@ class _PrivacyViewState extends State<PrivacyView> {
               child: Stack(
                 children: [
                   WebViewWidget(controller: _controller),
-                  Align(
+             if (agreeButton)  Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20),
