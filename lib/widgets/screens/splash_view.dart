@@ -71,8 +71,8 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    return const PopScope(
-      canPop: false,
+    return WillPopScope(
+      onWillPop: () async => false,
       child: SplashLoading(),
     );
   }
