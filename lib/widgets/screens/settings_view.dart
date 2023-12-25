@@ -75,7 +75,7 @@ class _SettingsViewState extends State<SettingsView> {
                     context: context,
                     builder: (context) => DialogPrivacyTerms(
                       title: 'Terms of use',
-                      text: TextHelper.privacyPolicyText,
+                      text: TextHelper.terms,
                     ),
                   );
                 },
