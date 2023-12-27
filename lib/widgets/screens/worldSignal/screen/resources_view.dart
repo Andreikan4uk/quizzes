@@ -35,7 +35,7 @@ class _ResourcesViewState extends State<ResourcesView> {
               CustomAppBar(
                 children: [
                   CustomBackButton(),
-                  Spacer(flex: 4),
+                  Spacer(flex: 6),
                   Text(
                     'Signals',
                     style: Theme.of(context)
@@ -43,7 +43,7 @@ class _ResourcesViewState extends State<ResourcesView> {
                         .labelLarge!
                         .copyWith(color: Colors.white),
                   ),
-                  Spacer(flex: 5),
+                  Spacer(flex: 8),
                 ],
               ),
               Expanded(
@@ -98,9 +98,11 @@ class _ErrorState extends StatelessWidget {
           SizedBox(height: 10),
           CupertinoButton(
             padding: EdgeInsets.zero,
-            child: Icon(Icons.replay_circle_filled_rounded),
+            child: Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ),
             onPressed: refresh,
-            color: Theme.of(context).colorScheme.onBackground,
           ),
         ],
       ),

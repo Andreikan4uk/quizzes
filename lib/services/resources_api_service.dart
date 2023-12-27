@@ -16,7 +16,7 @@ class ResourcesApiService {
             'https://commodity-rates-api.p.rapidapi.com/open-high-low-close/$formatedDate?base=$currency&symbols=${query.symbol}'),
         headers: {
           'X-RapidAPI-Key':
-              '85c601ed47mshd64e6dd8bda74e9p1f52b7jsn8e88c01213e6',
+              '19672c07cbmsh0eb7ed69aa7a086p18194ajsn1e466426c7bc',
           'X-RapidAPI-Host': 'commodity-rates-api.p.rapidapi.com'
         },
       );
