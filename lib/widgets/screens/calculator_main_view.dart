@@ -50,6 +50,7 @@ class _CalculatorViewState extends State<CalculatorView> {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: Assets.images.frameCalculaterView.provider(),
+                            fit: BoxFit.fill,
                           ),
                         ),
                         child: Column(

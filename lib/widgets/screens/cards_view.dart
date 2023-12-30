@@ -40,6 +40,7 @@ class _CardsViewState extends State<CardsView> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: Assets.images.frameCardsView.provider(),
+                      fit: BoxFit.fill,
                     ),
                   ),
                   child: Column(
