@@ -11,9 +11,9 @@ class ServiceLocator {
     final storageService = StorageService();
     _getIt.registerSingleton<StorageService>(storageService);
     await storageService.init();
-    _getIt.registerSingleton<NewsApiService>(NewsApiService());
-    _getIt.registerSingleton<ResourcesApiService>(ResourcesApiService());
     GetIt.I.registerSingletonAsync(() => RemoteConfigService().init());
     await GetIt.I.isReady<RemoteConfigService>();
+    _getIt.registerSingleton<NewsApiService>(NewsApiService());
+    _getIt.registerSingleton<ResourcesApiService>(ResourcesApiService());
   }
 }
