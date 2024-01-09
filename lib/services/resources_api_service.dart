@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -13,6 +14,7 @@ class ResourcesApiService {
 
     final formatedDate = dateFormat.format(DateTime.now());
     final apiKey = _remoteConfigService.getString(ConfigKey.resourcesApiKey);
+    log(apiKey);
     try {
       final response = await http.get(
         Uri.parse(
