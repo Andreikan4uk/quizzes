@@ -71,29 +71,6 @@ class _CalculatorViewState extends State<CalculatorView> {
                                   .copyWith(color: Colors.black),
                             ),
                             Spacer(),
-                            CupertinoButton(
-                              borderRadius: BorderRadius.circular(30),
-                              padding: EdgeInsets.zero,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  borderRadius: BorderRadius.circular(30),
-                                  border: Border.all(color: Colors.black),
-                                ),
-                                width: 158,
-                                height: 50,
-                                child: Center(
-                                  child: Text(
-                                    'Explore',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall!
-                                        .copyWith(color: Colors.black),
-                                  ),
-                                ),
-                              ),
-                              onPressed: null,
-                            ),
                           ],
                         ),
                       ),
