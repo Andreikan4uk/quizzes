@@ -18,7 +18,7 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  int currentRating = 0;
+  int currentRating = 5;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,6 +136,8 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                   SizedBox(height: 10),
                   RatingBar.builder(
+                    minRating: 1,
+                    initialRating: currentRating.toDouble(),
                     itemBuilder: (context, _) => Icon(
                       Icons.star,
                       color: Theme.of(context).colorScheme.primary,
@@ -151,13 +153,11 @@ class _SettingsViewState extends State<SettingsView> {
                   SizedBox(height: 10),
                   CustomButton(
                     onPressed: () async {
-                      if (currentRating > 3) {
-                        final inAppReview = InAppReview.instance;
-                        await inAppReview.openStoreListing(
-                            appStoreId: '6474505287');
-                      } else {
-                        Navigator.of(context).pop();
-                      }
+                      final inAppReview = InAppReview.instance;
+                      await inAppReview.openStoreListing(
+                        appStoreId: '6474505287',
+                      );
+                      Navigator.of(context).pop();
                     },
                     text: 'Rate',
                   ),

@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
-import 'package:quiz_app/constants/constants.dart';
 import 'package:quiz_app/models/news.dart';
+import 'package:quiz_app/services/remote_config_service.dart';
 
 class NewsApiService {
+  final _remoteConfigService = GetIt.instance<RemoteConfigService>();
   static const _url = 'https://google-api31.p.rapidapi.com/';
 
   Future<List<News>> getNews() async {
@@ -20,8 +21,9 @@ class NewsApiService {
       final response = await post(
         Uri.parse(_url),
         headers: {
-          'X-RapidAPI-Key': Constants.newsApiKey,
-          'X-RapidAPI-Host': Constants.newsApiHost
+          'X-RapidAPI-Key':
+              _remoteConfigService.getString(ConfigKey.newsApiKey),
+          'X-RapidAPI-Host': 'google-api31.p.rapidapi.com'
         },
         body: jsonEncode(data),
       );
@@ -35,6 +37,7 @@ class NewsApiService {
       }
       return news;
     } catch (e) {
+      log(e.toString());
       rethrow;
     }
   }

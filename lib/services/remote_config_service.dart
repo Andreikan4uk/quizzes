@@ -33,4 +33,5 @@ class RemoteConfigService {
 enum ConfigKey {
   privacyLink, 
   resourcesApiKey, 
+  newsApiKey, 
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -13,14 +12,14 @@ class ResourcesApiService {
     final dateFormat = DateFormat('yyyy-MM-dd');
 
     final formatedDate = dateFormat.format(DateTime.now());
-    final apiKey = _remoteConfigService.getString(ConfigKey.resourcesApiKey);
-    log(apiKey);
+
     try {
       final response = await http.get(
         Uri.parse(
             'https://commodity-rates-api.p.rapidapi.com/open-high-low-close/$formatedDate?base=$currency&symbols=${query.symbol}'),
         headers: {
-          'X-RapidAPI-Key': apiKey,
+          'X-RapidAPI-Key':
+              _remoteConfigService.getString(ConfigKey.resourcesApiKey),
           'X-RapidAPI-Host': 'commodity-rates-api.p.rapidapi.com'
         },
       );

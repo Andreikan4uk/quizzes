@@ -2,10 +2,6 @@ import 'package:quiz_app/generated/assets.gen.dart';
 import 'package:quiz_app/models/resource_query.dart';
 
 class Constants {
-  static const newsApiKey =
-      '19672c07cbmsh0eb7ed69aa7a086p18194ajsn1e466426c7bc';
-  static const newsApiHost = 'google-api31.p.rapidapi.com';
-
   static final reourseQueries = [
     ResourceQuery(symbol: 'XAU', icon: Assets.images.metall, name: 'Gold'),
     ResourceQuery(symbol: 'XAG', icon: Assets.images.metall, name: 'Silver'),
