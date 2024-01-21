@@ -1,14 +1,10 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:quiz_app/generated/assets.gen.dart';
 import 'package:quiz_app/helpers/text_helper.dart';
 import 'package:quiz_app/navigation/route_names.dart';
 import 'package:quiz_app/widgets/components/custom_appbar.dart';
-import 'package:quiz_app/widgets/components/custom_button.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -18,7 +14,6 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  int currentRating = 5;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,10 +77,13 @@ class _SettingsViewState extends State<SettingsView> {
               ),
               SizedBox(height: 20),
               _CustomButton(
-                icon: Assets.icons.rateApp.svg(),
-                buttonText: 'Rate app',
-                onPressed: () => showRating(),
-              ),
+                  icon: Assets.icons.rateApp.svg(),
+                  buttonText: 'Rate app',
+                  onPressed: () async {
+                    if (await InAppReview.instance.isAvailable()) {
+                      await InAppReview.instance.requestReview();
+                    }
+                  }),
               SizedBox(height: 20),
               _CustomButton(
                 icon: Assets.icons.support.svg(),
@@ -95,76 +93,6 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  void showRating() async {
-    showDialog(
-      context: context,
-      builder: (context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: double.infinity,
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.white),
-                color: Colors.white.withOpacity(0.26),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'Please rate us!',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(color: Colors.white),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    TextHelper.rateUsText,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium!
-                        .copyWith(color: Colors.white),
-                  ),
-                  SizedBox(height: 10),
-                  RatingBar.builder(
-                    minRating: 1,
-                    initialRating: currentRating.toDouble(),
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    unratedColor: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.4),
-                    onRatingUpdate: (rating) =>
-                        setState(() => currentRating = rating.toInt()),
-                    itemSize: 50,
-                  ),
-                  SizedBox(height: 10),
-                  CustomButton(
-                    onPressed: () async {
-                      final inAppReview = InAppReview.instance;
-                      await inAppReview.openStoreListing(
-                        appStoreId: '6474505287',
-                      );
-                      Navigator.of(context).pop();
-                    },
-                    text: 'Rate',
-                  ),
-                ],
-              ),
-            ),
-          ],
         ),
       ),
     );
