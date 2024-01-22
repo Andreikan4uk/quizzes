@@ -51,9 +51,15 @@ class _ResourcesViewState extends State<ResourcesView> {
                   valueListenable: _resourcesController,
                   builder: (context, value, child) {
                     if (value.isLoading) {
-                      return _LoadingState();
+                      return _LoadingState(remainingTime: value.remainingTime);
                     } else if (value.errorMessage != null) {
                       return _ErrorState(refresh: _resourcesController.refresh);
+                    } else if (value.isTimeout) {
+                      return _ErrorState(
+                        refresh: _resourcesController.refresh,
+                        errorMessage:
+                            'Loading timeout. Please, check your\ninternet connection and try again!',
+                      );
                     } else {
                       return _LoadedState(
                         resources: value.resources,
@@ -72,17 +78,39 @@ class _ResourcesViewState extends State<ResourcesView> {
 }
 
 class _LoadingState extends StatelessWidget {
-  const _LoadingState();
+  final int remainingTime;
+  const _LoadingState({
+    required this.remainingTime,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: CupertinoActivityIndicator(radius: 10));
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CupertinoActivityIndicator(
+            radius: 15,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Remainig loading time: ${remainingTime}s',
+            style: Theme.of(context).textTheme.titleMedium,
+          )
+        ],
+      ),
+    );
   }
 }
 
 class _ErrorState extends StatelessWidget {
   final VoidCallback refresh;
-  const _ErrorState({required this.refresh});
+  final String? errorMessage;
+  const _ErrorState({
+    required this.refresh,
+    this.errorMessage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +119,7 @@ class _ErrorState extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Some error has occured.\nPlease, try again',
+            errorMessage ?? 'Some error has occured.\nPlease, try again',
             style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.center,
           ),

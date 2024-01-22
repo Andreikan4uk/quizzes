@@ -95,8 +95,11 @@ class _LoadingState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: CupertinoActivityIndicator(radius: 20),
+    return Center(
+      child: CupertinoActivityIndicator(
+        radius: 15,
+        color: Theme.of(context).colorScheme.primary,
+      ),
     );
   }
 }
