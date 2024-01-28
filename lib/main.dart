@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Olymp trade InvestIQator', 
       initialRoute: RouteNames.splash,
       routes: Routes.get(context),
       theme: AppTheme.light(),
